@@ -1,0 +1,6 @@
+__pycache__/
+index/
+.env
+*.pyc
+safety_incidents.jsonl
+traces.jsonl
