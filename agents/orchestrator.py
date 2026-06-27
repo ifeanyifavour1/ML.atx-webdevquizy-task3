@@ -5,10 +5,11 @@ from agents.schemas import RetrievalRequest, SynthesisRequest
 from agents import retriever_agent, synthesizer, safety_reviewer
 
 TRACE_FILE = Path("traces.jsonl")
-MAX_ROUNDS = 2
+MAX_ROUNDS = 2    # max retry attempts if safety reviewer rejects
 
 
 def log_trace(entry):
+    # save every event to JSONL file for debugging later
     with open(TRACE_FILE, "a", encoding="utf-8") as f:
         f.write(json.dumps(entry) + "\n")
 
@@ -19,6 +20,7 @@ def run(query: str, user_role: str = "student") -> dict:
     print(f"[Orchestrator] User role: {user_role}")
     print(f"{'='*60}")
 
+    # trace keeps record of all messages between agents
     trace = {
         "timestamp": datetime.now().isoformat(),
         "query": query,
@@ -26,7 +28,7 @@ def run(query: str, user_role: str = "student") -> dict:
         "messages": []
     }
 
-    # step 1 - send retrieval request
+    # --- STEP 1: send retrieval request to retriever agent ---
     retrieval_req = RetrievalRequest(
         sender="orchestrator",
         recipient="retriever_agent",
@@ -40,7 +42,7 @@ def run(query: str, user_role: str = "student") -> dict:
     })
     log_trace({"event": "retrieval_request", "query": query})
 
-    # step 2 - get chunks from retriever
+    # --- STEP 2: get relevant chunks back from retriever ---
     retrieval_result = retriever_agent.run(retrieval_req)
     trace["messages"].append({
         "from": "retriever_agent",
@@ -50,6 +52,7 @@ def run(query: str, user_role: str = "student") -> dict:
     })
     log_trace({"event": "retrieval_result", "chunks": len(retrieval_result.chunks)})
 
+    # no chunks found = topic not in our documents
     if not retrieval_result.chunks:
         return {
             "answer": "I don't have enough information on that topic.",
@@ -57,7 +60,8 @@ def run(query: str, user_role: str = "student") -> dict:
             "trace": trace
         }
 
-    # step 3 - send to synthesizer
+    # --- STEP 3: synthesis + safety review loop ---
+    # if safety reviewer rejects, we retry with the critique
     rounds = 0
     final_answer = None
     critique = ""
@@ -66,9 +70,11 @@ def run(query: str, user_role: str = "student") -> dict:
         rounds += 1
         print(f"\n[Orchestrator] Synthesis round {rounds}")
 
+        # send chunks to synthesizer to generate an answer
         synth_req = SynthesisRequest(
             sender="orchestrator",
             recipient="synthesizer",
+            # if rejected before, include the critique so synthesizer can fix it
             query=query + (f"\n\nPrevious answer was rejected. Critique: {critique}" if critique else ""),
             chunks=retrieval_result.chunks
         )
@@ -88,7 +94,7 @@ def run(query: str, user_role: str = "student") -> dict:
         })
         log_trace({"event": "synthesis_result", "round": rounds})
 
-        # step 4 - safety review
+        # --- STEP 4: safety reviewer checks the answer ---
         verdict = safety_reviewer.run(synth_result)
         trace["messages"].append({
             "from": "safety_reviewer",
@@ -101,11 +107,13 @@ def run(query: str, user_role: str = "student") -> dict:
 
         if verdict.approved:
             final_answer = synth_result.answer
-            break
+            break    # answer is safe, exit the loop
         else:
+            # rejected — save critique and retry in next round
             critique = verdict.reason
             print(f"[Orchestrator] Answer rejected, retrying... Reason: {critique}")
 
+    # all rounds rejected — give a safe fallback answer
     if not final_answer:
         final_answer = "I was unable to generate a safe answer for your question."
 

@@ -1,0 +1,102 @@
+[
+  {
+    "question_id": "q01",
+    "question": "What is the CSS box model?",
+    "expected_chunk_ids": ["doc_05_chunk4"]
+  },
+  {
+    "question_id": "q02",
+    "question": "What is the difference between margin and padding?",
+    "expected_chunk_ids": ["doc_05_chunk4"]
+  },
+  {
+    "question_id": "q03",
+    "question": "How do you enable flexbox in CSS?",
+    "expected_chunk_ids": ["doc_06_chunk5"]
+  },
+  {
+    "question_id": "q04",
+    "question": "What is the difference between flexbox and grid?",
+    "expected_chunk_ids": ["doc_07_chunk6"]
+  },
+  {
+    "question_id": "q05",
+    "question": "What does the DOCTYPE declaration do?",
+    "expected_chunk_ids": ["doc_01_chunk0"]
+  },
+  {
+    "question_id": "q06",
+    "question": "What are semantic HTML elements?",
+    "expected_chunk_ids": ["doc_02_chunk1"]
+  },
+  {
+    "question_id": "q07",
+    "question": "How do you add an event listener in JavaScript?",
+    "expected_chunk_ids": ["doc_11_chunk10"]
+  },
+  {
+    "question_id": "q08",
+    "question": "What is the fetch API used for?",
+    "expected_chunk_ids": ["doc_12_chunk11"]
+  },
+  {
+    "question_id": "q09",
+    "question": "How do you store data in local storage?",
+    "expected_chunk_ids": ["doc_20_chunk19"]
+  },
+  {
+    "question_id": "q10",
+    "question": "What is a CSS variable and how do you use it?",
+    "expected_chunk_ids": ["doc_21_chunk20"]
+  },
+  {
+    "question_id": "q11",
+    "question": "What are media queries used for?",
+    "expected_chunk_ids": ["doc_13_chunk12"]
+  },
+  {
+    "question_id": "q12",
+    "question": "What is the difference between let and const?",
+    "expected_chunk_ids": ["doc_22_chunk21"]
+  },
+  {
+    "question_id": "q13",
+    "question": "How do you select an element by ID in JavaScript?",
+    "expected_chunk_ids": ["doc_10_chunk9"]
+  },
+  {
+    "question_id": "q14",
+    "question": "What is CSS position fixed used for?",
+    "expected_chunk_ids": ["doc_08_chunk7"]
+  },
+  {
+    "question_id": "q15",
+    "question": "How do you make a website responsive?",
+    "expected_chunk_ids": ["doc_13_chunk12"]
+  },
+  {
+    "question_id": "q16",
+    "question": "What is the difference between innerHTML and textContent?",
+    "expected_chunk_ids": ["doc_10_chunk9"]
+  },
+  {
+    "question_id": "q17",
+    "question": "How do you handle errors in JavaScript?",
+    "expected_chunk_ids": ["doc_28_chunk27"]
+  },
+  {
+    "question_id": "q18",
+    "question": "What is async await in JavaScript?",
+    "expected_chunk_ids": ["doc_25_chunk24"]
+  },
+  {
+    "question_id": "q19",
+    "question": "How do you implement dark mode in CSS?",
+    "expected_chunk_ids": ["doc_30_chunk29"]
+  },
+  {
+    "question_id": "q20",
+    "question": "What is SEO and why does it matter for web pages?",
+    "expected_chunk_ids": ["doc_29_chunk28"]
+  }
+]
